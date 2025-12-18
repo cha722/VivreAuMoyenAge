@@ -3,325 +3,364 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeux du Moyen Âge - Quiz & Mémoire</title>
+    <title>La Vie Au Moyen Âge - Jeux Interactifs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #5d4037;
-            --accent: #d4af37;
-            --bg: #fdf5e6;
-            --text: #3e2723;
+            --brun-sombre: #3e2723;
+            --brun-moyen: #5d4037;
+            --or: #d4af37;
+            --creme: #fdf5e6;
+            --reussite: #2e7d32;
+            --erreur: #c62828;
         }
 
+        * { box-sizing: border-box; transition: all 0.2s ease; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: 'Lato', sans-serif;
-            background-color: #d2b48c;
-            color: var(--text);
+            font-family: 'EB Garamond', serif;
+            background: #2a1b15;
+            color: var(--brun-sombre);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
         }
 
-        .container {
+        .parchemin {
+            background-color: var(--creme);
             max-width: 800px;
             width: 100%;
-            background: var(--bg);
-            border: 10px solid var(--primary);
-            padding: 40px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center;
+            border: 8px solid var(--brun-moyen);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            padding: 20px;
             position: relative;
-            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 10px;
         }
 
-        .container::after {
+        @media (min-width: 600px) {
+            .parchemin { padding: 40px; border-width: 14px; }
+        }
+
+        .parchemin::before {
             content: '';
             position: absolute;
             top: 5px; left: 5px; right: 5px; bottom: 5px;
-            border: 1px solid var(--accent);
+            border: 2px solid var(--or);
             pointer-events: none;
         }
 
         h1 {
             font-family: 'Cinzel', serif;
-            font-size: 36px;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            font-size: 26px;
+            margin: 0 0 10px 0;
+            color: var(--brun-sombre);
+            text-transform: uppercase;
         }
 
-        .team-names {
+        @media (min-width: 600px) { h1 { font-size: 42px; } }
+
+        .equipe {
+            font-size: 15px;
+            color: var(--brun-moyen);
+            margin-bottom: 25px;
             font-style: italic;
-            color: #795548;
-            margin-bottom: 30px;
-            font-size: 18px;
+            border-bottom: 1px solid var(--or);
+            display: inline-block;
+            padding: 0 15px 5px 15px;
         }
 
-        .nav-buttons {
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background: var(--primary);
-            color: white;
-            border: 2px solid var(--accent);
-            padding: 12px 24px;
-            font-size: 18px;
-            cursor: pointer;
-            font-family: 'Cinzel', serif;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background: var(--accent);
-            color: var(--primary);
-            transform: scale(1.05);
-        }
-
-        /* --- STYLE DE L'INTRODUCTION --- */
-        #intro-screen { display: block; }
-        .intro-text { font-size: 20px; line-height: 1.6; margin-bottom: 30px; }
-
-        /* --- STYLE DU QUIZ --- */
-        #quiz-container { display: none; }
-        .question { font-size: 24px; margin-bottom: 20px; font-weight: bold; }
-        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .option-btn { background: white; color: var(--text); border: 2px solid var(--primary); font-family: 'Lato', sans-serif; }
-
-        /* --- STYLE DU MEMORY --- */
-        #memory-container { display: none; }
-        .memory-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            max-width: 400px;
-            margin: 20px auto;
-        }
-        .card {
-            aspect-ratio: 1;
-            background: var(--primary);
-            border: 2px solid var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            cursor: pointer;
-            color: transparent;
-            user-select: none;
-            transition: transform 0.3s;
-        }
-        .card.flipped {
-            background: white;
-            color: black;
-            transform: rotateY(180deg);
-        }
-        .card.matched {
-            background: #a5d6a7;
-            cursor: default;
-        }
-
-        #message-box {
-            margin-top: 20px;
-            padding: 15px;
-            font-weight: bold;
-            border-radius: 5px;
-            display: none;
-        }
-
-        footer {
-            margin-top: 20px;
+        .btn-medieval {
+            background: var(--brun-moyen);
+            color: var(--or);
+            border: 2px solid var(--or);
+            padding: 15px 25px;
             font-family: 'Cinzel', serif;
             font-size: 16px;
-            color: var(--primary);
-            text-align: center;
-            padding: 20px;
+            cursor: pointer;
+            margin: 8px;
+            width: 100%;
+            max-width: 350px;
+            border-radius: 4px;
         }
 
-        .hidden { display: none; }
+        .btn-medieval:hover { background: var(--brun-sombre); transform: translateY(-2px); }
+
+        .section-jeu { display: none; }
+
+        /* QUIZ */
+        .question-box { font-size: 22px; font-weight: bold; margin-bottom: 20px; padding: 20px; background: rgba(212, 175, 55, 0.1); border-radius: 8px; border-left: 5px solid var(--or); }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 600px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+        .option-btn { background: white; border: 2px solid var(--brun-moyen); padding: 15px; font-size: 19px; cursor: pointer; border-radius: 6px; font-family: 'EB Garamond', serif; }
+        .correct { background-color: #c8e6c9 !important; border-color: var(--reussite) !important; color: var(--reussite); }
+        .incorrect { background-color: #ffcdd2 !important; border-color: var(--erreur) !important; color: var(--erreur); }
+
+        /* TRI DE L'INTENDANT (NOUVEAU SYSTÈME) */
+        .zone-tri { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
+        @media (min-width: 600px) { .zone-tri { flex-direction: row; justify-content: space-around; } }
+        .coffre { border: 3px dashed var(--brun-moyen); padding: 15px; min-height: 140px; background: rgba(255,255,255,0.5); border-radius: 10px; flex: 1; transition: 0.3s; }
+        .item-tri { background: white; border: 2px solid var(--brun-moyen); padding: 10px 15px; margin: 6px; cursor: pointer; border-radius: 5px; font-weight: bold; display: inline-block; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .item-tri.selected { border: 3px solid var(--or); background: var(--creme); }
+        .items-deposes { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+
+        /* MATCHING GAME */
+        .grille-matching { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 450px; margin: 0 auto; }
+        .carte { aspect-ratio: 1; background: var(--brun-moyen); border: 2px solid var(--or); border-radius: 6px; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform 0.5s; }
+        .carte.retournee { transform: rotateY(180deg); }
+        .carte-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; font-size: 28px; border-radius: 4px; }
+        .carte-dos { background: var(--brun-moyen); color: var(--or); font-size: 20px; }
+        .carte-devant { background: white; transform: rotateY(180deg); color: #000; }
+        .carte.trouvee { visibility: hidden; pointer-events: none; }
+
+        #feedback { margin-top: 20px; font-size: 22px; font-weight: bold; min-height: 30px; }
+
+        footer { margin-top: 30px; color: var(--or); font-family: 'Cinzel', serif; text-align: center; font-size: 13px; line-height: 1.6; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Oyez ! Oyez ! Jeux Médiévaux</h1>
-        <div class="team-names">Présenté par Omar Chaar, Yasmine Chahaitly, Syma Demchkie et Hassan Rahal</div>
-        
-        <!-- Écran d'Introduction -->
-        <div id="intro-screen">
-            <div class="intro-text">
-                Bienvenue, noble visiteur ! <br>
-                Après avoir découvert la vie au Moyen Âge à travers notre exposé, il est temps de tester tes connaissances et ton agilité d'esprit. Choisis un défi ci-dessous !
-            </div>
-            <div class="nav-buttons">
-                <button onclick="showGame('quiz')">Lancer le Quiz</button>
-                <button onclick="showGame('memory')">Lancer le Memory</button>
-            </div>
+    <div class="parchemin">
+        <h1>La Vie Au Moyen Âge</h1>
+        <div class="equipe">Omar Chaar • Yasmine Chahaitly • Syma Demchkie • Hassan Rahal</div>
+
+        <!-- MENU PRINCIPAL -->
+        <div id="section-accueil" class="section-jeu" style="display: block;">
+            <p style="font-size: 20px;">Choisissez votre épreuve :</p>
+            <button class="btn-medieval" onclick="ouvrirJeu('quiz')">📜 Le Quiz Royal</button><br>
+            <button class="btn-medieval" onclick="ouvrirJeu('tri')">📦 Le Tri de l'Intendant</button><br>
+            <button class="btn-medieval" onclick="ouvrirJeu('matching')">🃏 Le Jeu des Paires</button>
         </div>
 
-        <!-- Section Quiz -->
-        <div id="quiz-container">
-            <div id="quiz-content">
-                <div class="question" id="question-text">Question ici ?</div>
-                <div class="options" id="options-grid"></div>
+        <!-- QUIZ -->
+        <div id="section-quiz" class="section-jeu">
+            <h2 style="font-family:'Cinzel';">Le Quiz Royal</h2>
+            <div id="quiz-contenu">
+                <div class="question-box" id="enonce-question"></div>
+                <div class="options-grid" id="grille-options"></div>
             </div>
-            <div id="quiz-results" class="hidden">
-                <h2>Bravo, Noble Écuyer !</h2>
-                <p id="score-text"></p>
-                <button onclick="showGame('intro')">Retour au menu</button>
+            <div id="resultat-quiz" style="display:none;">
+                <h3 id="score-final" style="font-size: 26px;"></h3>
+                <button class="btn-medieval" onclick="ouvrirJeu('quiz')">Recommencer</button>
             </div>
+            <button class="btn-medieval" onclick="allerMenu()" style="margin-top:25px; opacity: 0.8;">Retour</button>
         </div>
 
-        <!-- Section Memory -->
-        <div id="memory-container">
-            <p>Retrouve les paires d'objets médiévaux le plus vite possible !</p>
-            <div class="memory-grid" id="memory-grid"></div>
-            <button onclick="startMemory()">Recommencer</button>
-            <button onclick="showGame('intro')" style="margin-top: 10px;">Retour au menu</button>
+        <!-- TRI DE L'INTENDANT (AVEC CORRECTION FINALE) -->
+        <div id="section-tri" class="section-jeu">
+            <h2 style="font-family:'Cinzel';">Le Tri de l'Intendant</h2>
+            <p>Placez tous les objets dans les coffres, puis lancez la correction !</p>
+            <div class="zone-tri">
+                <div class="coffre" id="zone-paysan" onclick="tenterDepot('paysan')">
+                    <h3>🌾 Paysans</h3>
+                    <div class="items-deposes" id="depot-paysan"></div>
+                </div>
+                <div class="coffre" id="zone-seigneur" onclick="tenterDepot('seigneur')">
+                    <h3>🏰 Seigneurs</h3>
+                    <div class="items-deposes" id="depot-seigneur"></div>
+                </div>
+            </div>
+            <div id="liste-objets" style="margin-top:25px; min-height: 50px;"></div>
+            <div id="controles-tri" style="margin-top:10px; display: none;">
+                <button class="btn-medieval" onclick="verifierTri()">🔍 Vérifier le tri</button>
+            </div>
+            <button class="btn-medieval" onclick="allerMenu()" style="margin-top:25px; opacity: 0.8;">Retour</button>
         </div>
 
-        <div id="message-box"></div>
+        <!-- MATCHING -->
+        <div id="section-matching" class="section-jeu">
+            <h2 style="font-family:'Cinzel';">Le Jeu des Paires</h2>
+            <p>Retrouvez tous les symboles cachés !</p>
+            <div class="grille-matching" id="grille-paires"></div>
+            <button class="btn-medieval" onclick="allerMenu()" style="margin-top:20px; opacity: 0.8;">Retour</button>
+        </div>
+
+        <div id="feedback"></div>
     </div>
 
     <footer>
-        Fait par Omar Chaar - Yasmine Chahaitly - Syma Demchkie - Hassan Rahal
+        PROJET : LA VIE AU MOYEN ÂGE<br>
+        Réalisé par : Omar Chaar, Yasmine Chahaitly, Syma Demchkie et Hassan Rahal
     </footer>
 
     <script>
-        // DONNÉES DU QUIZ
-        const quizData = [
-            { q: "En quel siècle commence le Moyen Âge ?", a: ["Ve siècle", "Xe siècle", "XVe siècle", "Ier siècle"], correct: 0 },
-            { q: "Où les enfants pauvres apprenaient-ils ?", a: ["À l'université", "Au château", "En travaillant", "Sur internet"], correct: 2 },
-            { q: "Quel aliment était rare pour les paysans ?", a: ["Le pain", "La viande", "La soupe", "Les racines"], correct: 1 },
-            { q: "Comment s'appelle l'ancêtre du football ?", a: ["La pétanque", "Le tennis", "La soule", "Le rugby"], correct: 2 },
-            { q: "Où se trouvaient la plupart des écoles ?", a: ["Dans les mairies", "Dans les monastères", "Dans les forêts", "Dans les bateaux"], correct: 1 }
+        function ouvrirJeu(type) {
+            document.querySelectorAll('.section-jeu').forEach(s => s.style.display = 'none');
+            document.getElementById('feedback').innerText = '';
+            const target = document.getElementById('section-' + type);
+            if (target) target.style.display = 'block';
+            
+            if(type === 'quiz') lancerQuiz();
+            if(type === 'tri') lancerTri();
+            if(type === 'matching') lancerMatching();
+        }
+
+        function allerMenu() { ouvrirJeu('accueil'); }
+
+        function showMsg(txt, col) {
+            const f = document.getElementById('feedback');
+            f.innerText = txt; f.style.color = col;
+            if(txt !== "") setTimeout(() => { if(f.innerText === txt) f.innerText = ""; }, 3000);
+        }
+
+        // --- QUIZ ---
+        const questions = [
+            { q: "Quelle était l'activité principale des paysans ?", r: ["L'agriculture", "La poésie", "La navigation", "La forge"], correct: 0 },
+            { q: "Où les moines recopiaient-ils les livres ?", r: ["Au château", "Au scriptorium", "Au marché", "À l'écurie"], correct: 1 },
+            { q: "Quel aliment était la base de la nourriture ?", r: ["Les pâtes", "Le pain", "Les frites", "Le riz"], correct: 1 },
+            { q: "Comment s'appelle l'ancêtre du football ?", r: ["La pétanque", "Le tennis", "La soule", "Le cricket"], correct: 2 },
+            { q: "En quel siècle se termine le Moyen Âge ?", r: ["Xe siècle", "XIIe siècle", "XVe siècle", "XVIIIe siècle"], correct: 2 }
         ];
-
-        let currentQuestion = 0;
-        let score = 0;
-
-        // DONNÉES DU MEMORY
-        const icons = ['🏰', '⚔️', '🛡️', '👑', '🐴', '📜', '⛪', '🥖'];
-        let flippedCards = [];
-        let lockBoard = false;
-
-        function showGame(game) {
-            document.getElementById('intro-screen').style.display = game === 'intro' ? 'block' : 'none';
-            document.getElementById('quiz-container').style.display = game === 'quiz' ? 'block' : 'none';
-            document.getElementById('memory-container').style.display = game === 'memory' ? 'block' : 'none';
-            
-            if(game === 'quiz') startQuiz();
-            if(game === 'memory') startMemory();
+        let qIdx = 0, score = 0;
+        function lancerQuiz() {
+            qIdx = 0; score = 0;
+            document.getElementById('quiz-contenu').style.display = 'block';
+            document.getElementById('resultat-quiz').style.display = 'none';
+            afficherQ();
         }
-
-        // LOGIQUE DU QUIZ
-        function startQuiz() {
-            currentQuestion = 0;
-            score = 0;
-            document.getElementById('quiz-content').classList.remove('hidden');
-            document.getElementById('quiz-results').classList.add('hidden');
-            showQuestion();
-        }
-
-        function showQuestion() {
-            const data = quizData[currentQuestion];
-            document.getElementById('question-text').innerText = data.q;
-            const grid = document.getElementById('options-grid');
-            grid.innerHTML = '';
-            data.a.forEach((opt, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(i);
-                grid.appendChild(btn);
+        function afficherQ() {
+            const curr = questions[qIdx];
+            document.getElementById('enonce-question').innerText = curr.q;
+            const g = document.getElementById('grille-options');
+            g.innerHTML = '';
+            curr.r.forEach((rep, i) => {
+                const b = document.createElement('button');
+                b.className = 'option-btn'; b.innerText = rep;
+                b.onclick = () => {
+                    document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+                    if(i === curr.correct) { b.classList.add('correct'); score++; }
+                    else { b.classList.add('incorrect'); document.querySelectorAll('.option-btn')[curr.correct].classList.add('correct'); }
+                    setTimeout(() => {
+                        qIdx++;
+                        if(qIdx < questions.length) afficherQ();
+                        else {
+                            document.getElementById('quiz-contenu').style.display = 'none';
+                            document.getElementById('resultat-quiz').style.display = 'block';
+                            document.getElementById('score-final').innerText = `Score : ${score} / ${questions.length}`;
+                        }
+                    }, 1200);
+                };
+                g.appendChild(b);
             });
         }
 
-        function checkAnswer(choice) {
-            if (choice === quizData[currentQuestion].correct) {
-                score++;
-                showMessage("Félicitations ! C'est exact.", "#a5d6a7");
-            } else {
-                showMessage("Hélas ! La réponse était : " + quizData[currentQuestion].a[quizData[currentQuestion].correct], "#ef9a9a");
-            }
+        // --- TRI DE L'INTENDANT (CORRECTION FINALE) ---
+        const elementsTri = [
+            { nom: "Faux en fer", cat: "paysan" }, { nom: "Épée gravée", cat: "seigneur" },
+            { nom: "Sac de grain", cat: "paysan" }, { nom: "Couronne d'or", cat: "seigneur" },
+            { nom: "Charrue", cat: "paysan" }, { nom: "Armure", cat: "seigneur" }
+        ];
+        let itemSel = null;
 
-            currentQuestion++;
-            if (currentQuestion < quizData.length) {
-                setTimeout(showQuestion, 1500);
-            } else {
-                setTimeout(showResults, 1500);
-            }
-        }
-
-        function showResults() {
-            document.getElementById('quiz-content').classList.add('hidden');
-            document.getElementById('quiz-results').classList.remove('hidden');
-            document.getElementById('score-text').innerText = `Ton score est de ${score} sur ${quizData.length}. Bien joué !`;
-        }
-
-        // LOGIQUE DU MEMORY
-        function startMemory() {
-            const grid = document.getElementById('memory-grid');
-            grid.innerHTML = '';
-            flippedCards = [];
-            const deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
-            
-            deck.forEach((icon, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.icon = icon;
-                card.innerText = icon;
-                card.onclick = () => flipCard(card);
-                grid.appendChild(card);
+        function lancerTri() {
+            const list = document.getElementById('liste-objets');
+            list.innerHTML = '';
+            document.getElementById('depot-paysan').innerHTML = '';
+            document.getElementById('depot-seigneur').innerHTML = '';
+            document.getElementById('controles-tri').style.display = 'none';
+            itemSel = null;
+            elementsTri.sort(() => Math.random() - 0.5).forEach((obj) => {
+                creerBoutonTri(obj, list);
             });
         }
 
-        function flipCard(card) {
-            if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+        function creerBoutonTri(obj, parent) {
+            const d = document.createElement('div');
+            d.className = 'item-tri';
+            d.innerText = obj.nom;
+            d.dataset.cat = obj.cat;
+            d.onclick = (e) => {
+                document.querySelectorAll('.item-tri').forEach(it => it.classList.remove('selected'));
+                d.classList.add('selected');
+                itemSel = { el: d, cat: obj.cat, nom: obj.nom };
+                e.stopPropagation();
+            };
+            parent.appendChild(d);
+        }
 
-            card.classList.add('flipped');
-            flippedCards.push(card);
+        function tenterDepot(coffreId) {
+            if(!itemSel) { showMsg("Sélectionnez un objet en bas !", "orange"); return; }
+            
+            const destination = document.getElementById('depot-' + coffreId);
+            destination.appendChild(itemSel.el);
+            itemSel.el.classList.remove('selected');
+            itemSel.el.dataset.depot = coffreId; // On enregistre où il a été mis
+            itemSel = null;
 
-            if (flippedCards.length === 2) {
-                checkMatch();
+            // Si plus d'objets dans la liste, on montre le bouton de vérification
+            if(document.getElementById('liste-objets').children.length === 0) {
+                document.getElementById('controles-tri').style.display = 'block';
             }
         }
 
-        function checkMatch() {
-            lockBoard = true;
-            const [c1, c2] = flippedCards;
-            if (c1.dataset.icon === c2.dataset.icon) {
-                c1.classList.add('matched');
-                c2.classList.add('matched');
-                flippedCards = [];
-                lockBoard = false;
-                if (document.querySelectorAll('.matched').length === 16) {
-                    showMessage("Victoire ! Quelle mémoire impressionnante !", "#a5d6a7");
-                }
+        function verifierTri() {
+            const paysans = document.getElementById('depot-paysan').querySelectorAll('.item-tri');
+            const seigneurs = document.getElementById('depot-seigneur').querySelectorAll('.item-tri');
+            const liste = document.getElementById('liste-objets');
+            let erreurs = 0;
+
+            const verifier = (elements, coffreAttendu) => {
+                elements.forEach(el => {
+                    if(el.dataset.cat !== coffreAttendu) {
+                        liste.appendChild(el); // Retour à la liste
+                        erreurs++;
+                    } else {
+                        el.style.backgroundColor = "#c8e6c9"; // Vert pour bon
+                        el.onclick = null; // On ne peut plus le bouger
+                    }
+                });
+            };
+
+            verifier(paysans, "paysan");
+            verifier(seigneurs, "seigneur");
+
+            if(erreurs > 0) {
+                showMsg(`Il y a ${erreurs} erreur(s). Les objets ont été renvoyés !`, "red");
+                document.getElementById('controles-tri').style.display = 'none';
             } else {
-                setTimeout(() => {
-                    c1.classList.remove('flipped');
-                    c2.classList.remove('flipped');
-                    flippedCards = [];
-                    lockBoard = false;
-                }, 1000);
+                showMsg("Félicitations ! L'intendant est ravi, tout est bien trié.", "green");
+                document.getElementById('controles-tri').style.display = 'none';
             }
         }
 
-        function showMessage(msg, color) {
-            const box = document.getElementById('message-box');
-            box.innerText = msg;
-            box.style.backgroundColor = color;
-            box.style.display = 'block';
-            setTimeout(() => { box.style.display = 'none'; }, 2000);
+        // --- MATCHING ---
+        const symboles = ['🏰', '⚔️', '👑', '🥖', '🐎', '📜', '⛪', '🛡️'];
+        let cardsOpen = [], canFlip = true;
+        function lancerMatching() {
+            const g = document.getElementById('grille-paires');
+            g.innerHTML = '';
+            cardsOpen = []; canFlip = true;
+            const deck = [...symboles, ...symboles].sort(() => Math.random() - 0.5);
+            deck.forEach(s => {
+                const c = document.createElement('div');
+                c.className = 'carte';
+                c.innerHTML = `<div class="carte-face carte-dos">⚜️</div><div class="carte-face carte-devant">${s}</div>`;
+                c.onclick = () => {
+                    if(!canFlip || c.classList.contains('retournee')) return;
+                    c.classList.add('retournee');
+                    cardsOpen.push({el: c, val: s});
+                    if(cardsOpen.length === 2) {
+                        canFlip = false;
+                        if(cardsOpen[0].val === cardsOpen[1].val) {
+                            setTimeout(() => {
+                                cardsOpen.forEach(ca => ca.el.classList.add('trouvee'));
+                                cardsOpen = []; canFlip = true;
+                            }, 600);
+                        } else {
+                            setTimeout(() => {
+                                cardsOpen.forEach(ca => ca.el.classList.remove('retournee'));
+                                cardsOpen = []; canFlip = true;
+                            }, 1000);
+                        }
+                    }
+                };
+                g.appendChild(c);
+            });
         }
     </script>
 </body>
