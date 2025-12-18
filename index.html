@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeux du Moyen Âge - Quiz & Mémoire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5d4037;
+            --accent: #d4af37;
+            --bg: #fdf5e6;
+            --text: #3e2723;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #d2b48c;
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--bg);
+            border: 10px solid var(--primary);
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 1px solid var(--accent);
+            pointer-events: none;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 36px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .team-names {
+            font-style: italic;
+            color: #795548;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .nav-buttons {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: 2px solid var(--accent);
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* --- STYLE DE L'INTRODUCTION --- */
+        #intro-screen { display: block; }
+        .intro-text { font-size: 20px; line-height: 1.6; margin-bottom: 30px; }
+
+        /* --- STYLE DU QUIZ --- */
+        #quiz-container { display: none; }
+        .question { font-size: 24px; margin-bottom: 20px; font-weight: bold; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option-btn { background: white; color: var(--text); border: 2px solid var(--primary); font-family: 'Lato', sans-serif; }
+
+        /* --- STYLE DU MEMORY --- */
+        #memory-container { display: none; }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 20px auto;
+        }
+        .card {
+            aspect-ratio: 1;
+            background: var(--primary);
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            color: transparent;
+            user-select: none;
+            transition: transform 0.3s;
+        }
+        .card.flipped {
+            background: white;
+            color: black;
+            transform: rotateY(180deg);
+        }
+        .card.matched {
+            background: #a5d6a7;
+            cursor: default;
+        }
+
+        #message-box {
+            margin-top: 20px;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            display: none;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 16px;
+            color: var(--primary);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Oyez ! Oyez ! Jeux Médiévaux</h1>
+        <div class="team-names">Présenté par Omar Chaar, Yasmine Chahaitly, Syma Demchkie et Hassan Rahal</div>
+        
+        <!-- Écran d'Introduction -->
+        <div id="intro-screen">
+            <div class="intro-text">
+                Bienvenue, noble visiteur ! <br>
+                Après avoir découvert la vie au Moyen Âge à travers notre exposé, il est temps de tester tes connaissances et ton agilité d'esprit. Choisis un défi ci-dessous !
+            </div>
+            <div class="nav-buttons">
+                <button onclick="showGame('quiz')">Lancer le Quiz</button>
+                <button onclick="showGame('memory')">Lancer le Memory</button>
+            </div>
+        </div>
+
+        <!-- Section Quiz -->
+        <div id="quiz-container">
+            <div id="quiz-content">
+                <div class="question" id="question-text">Question ici ?</div>
+                <div class="options" id="options-grid"></div>
+            </div>
+            <div id="quiz-results" class="hidden">
+                <h2>Bravo, Noble Écuyer !</h2>
+                <p id="score-text"></p>
+                <button onclick="showGame('intro')">Retour au menu</button>
+            </div>
+        </div>
+
+        <!-- Section Memory -->
+        <div id="memory-container">
+            <p>Retrouve les paires d'objets médiévaux le plus vite possible !</p>
+            <div class="memory-grid" id="memory-grid"></div>
+            <button onclick="startMemory()">Recommencer</button>
+            <button onclick="showGame('intro')" style="margin-top: 10px;">Retour au menu</button>
+        </div>
+
+        <div id="message-box"></div>
+    </div>
+
+    <footer>
+        Fait par Omar Chaar - Yasmine Chahaitly - Syma Demchkie - Hassan Rahal
+    </footer>
+
+    <script>
+        // DONNÉES DU QUIZ
+        const quizData = [
+            { q: "En quel siècle commence le Moyen Âge ?", a: ["Ve siècle", "Xe siècle", "XVe siècle", "Ier siècle"], correct: 0 },
+            { q: "Où les enfants pauvres apprenaient-ils ?", a: ["À l'université", "Au château", "En travaillant", "Sur internet"], correct: 2 },
+            { q: "Quel aliment était rare pour les paysans ?", a: ["Le pain", "La viande", "La soupe", "Les racines"], correct: 1 },
+            { q: "Comment s'appelle l'ancêtre du football ?", a: ["La pétanque", "Le tennis", "La soule", "Le rugby"], correct: 2 },
+            { q: "Où se trouvaient la plupart des écoles ?", a: ["Dans les mairies", "Dans les monastères", "Dans les forêts", "Dans les bateaux"], correct: 1 }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        // DONNÉES DU MEMORY
+        const icons = ['🏰', '⚔️', '🛡️', '👑', '🐴', '📜', '⛪', '🥖'];
+        let flippedCards = [];
+        let lockBoard = false;
+
+        function showGame(game) {
+            document.getElementById('intro-screen').style.display = game === 'intro' ? 'block' : 'none';
+            document.getElementById('quiz-container').style.display = game === 'quiz' ? 'block' : 'none';
+            document.getElementById('memory-container').style.display = game === 'memory' ? 'block' : 'none';
+            
+            if(game === 'quiz') startQuiz();
+            if(game === 'memory') startMemory();
+        }
+
+        // LOGIQUE DU QUIZ
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('quiz-content').classList.remove('hidden');
+            document.getElementById('quiz-results').classList.add('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const data = quizData[currentQuestion];
+            document.getElementById('question-text').innerText = data.q;
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            data.a.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(i);
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(choice) {
+            if (choice === quizData[currentQuestion].correct) {
+                score++;
+                showMessage("Félicitations ! C'est exact.", "#a5d6a7");
+            } else {
+                showMessage("Hélas ! La réponse était : " + quizData[currentQuestion].a[quizData[currentQuestion].correct], "#ef9a9a");
+            }
+
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                setTimeout(showQuestion, 1500);
+            } else {
+                setTimeout(showResults, 1500);
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('quiz-results').classList.remove('hidden');
+            document.getElementById('score-text').innerText = `Ton score est de ${score} sur ${quizData.length}. Bien joué !`;
+        }
+
+        // LOGIQUE DU MEMORY
+        function startMemory() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            flippedCards = [];
+            const deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
+            
+            deck.forEach((icon, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.icon = icon;
+                card.innerText = icon;
+                card.onclick = () => flipCard(card);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            lockBoard = true;
+            const [c1, c2] = flippedCards;
+            if (c1.dataset.icon === c2.dataset.icon) {
+                c1.classList.add('matched');
+                c2.classList.add('matched');
+                flippedCards = [];
+                lockBoard = false;
+                if (document.querySelectorAll('.matched').length === 16) {
+                    showMessage("Victoire ! Quelle mémoire impressionnante !", "#a5d6a7");
+                }
+            } else {
+                setTimeout(() => {
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    flippedCards = [];
+                    lockBoard = false;
+                }, 1000);
+            }
+        }
+
+        function showMessage(msg, color) {
+            const box = document.getElementById('message-box');
+            box.innerText = msg;
+            box.style.backgroundColor = color;
+            box.style.display = 'block';
+            setTimeout(() => { box.style.display = 'none'; }, 2000);
+        }
+    </script>
+</body>
+</html>
